@@ -36,10 +36,9 @@ class Protocol(object):
       protocol['introduction'] = soup.find("div", {"id" : "introduction"}).p.text
     except AttributeError:
       protocol['introduction'] = ""
-    try:
-      protocol['reagents'] = soup.find("div", {"id" : "reagents"}).p.text
-    except AttributeError:
-      protocol['reagents'] = ""
+    
+    reagentList = self._parseItemList(soup.find("div", {"id" : "reagents"}).p.contents)
+    protocol['reagents'] = reagentList
     
     equipmentList = self._parseItemList(soup.find("div", {"id" : "equipment"}).p.contents)
     protocol['equipment'] = equipmentList
@@ -131,5 +130,5 @@ class Protocol(object):
     return json
     
 #m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
-#print m.equipment
+#print m.reagents
 #print m.toJSON()
