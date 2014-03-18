@@ -32,14 +32,38 @@ class Protocol(object):
       "name" : labTag.text,
       "id" : labTag['href'].replace("/protocolexchange/labgroups/","")
     }
-    protocol['introduction'] = soup.find("div", {"id" : "introduction"}).p.text
-    protocol['reagents'] = soup.find("div", {"id" : "reagents"}).p.text
-    protocol['equipment'] = soup.find("div", {"id" : "equipment"}).p.text
-    protocol['procedure'] = soup.find("div", {"id" : "procedure"}).p.text
-    protocol['timing'] = soup.find("div", {"id" : "time_taken"}).p.text
-    protocol['critical'] = soup.find("div", {"id" : "critical_steps"}).p.text
-    protocol['results'] = soup.find("div", {"id" : "anticipated_results"}).p.text
-    protocol['references'] = soup.find("div", {"id" : "references"}).p.text
+    try:
+      protocol['introduction'] = soup.find("div", {"id" : "introduction"}).p.text
+    except AttributeError:
+      protocol['introduction'] = ""
+    try:
+      protocol['reagents'] = soup.find("div", {"id" : "reagents"}).p.text
+    except AttributeError:
+      protocol['reagents'] = ""
+    
+    equipmentList = self._parseItemList(soup.find("div", {"id" : "equipment"}).p.contents)
+    protocol['equipment'] = equipmentList
+    
+    try:
+      protocol['procedure'] = soup.find("div", {"id" : "procedure"}).p.text
+    except AttributeError:
+      protocol['procedure'] = ""
+    try:
+      protocol['timing'] = soup.find("div", {"id" : "time_taken"}).p.text
+    except AttributeError:
+      protocol['timing'] = ""
+    try:
+      protocol['critical'] = soup.find("div", {"id" : "critical_steps"}).p.text
+    except AttributeError:
+      protocol['critical'] = ""
+    try:
+      protocol['results'] = soup.find("div", {"id" : "anticipated_results"}).p.text
+    except AttributeError:
+      protocol['results'] = ""
+    try:
+      protocol['references'] = soup.find("div", {"id" : "references"}).p.text
+    except AttributeError:
+      protocol['references'] = ""
     
     rawSubjectTerms = soup.findAll("div", {"class" : "article-keywords"})[0].findAll("li")
     subjectTerms = []
@@ -54,6 +78,27 @@ class Protocol(object):
     protocol['keywords'] = keywords
     
     return protocol
+  
+  def _parseItemList(self, rawList):
+    """Takes in a p element with individual lines and separates content using <br/> as a delimiter"""
+    pass
+    equipment = []
+    equipmentBuffer = ""                               #Clear the buffer
+    for i in range(len(rawList)-1):
+      try:
+        content = rawList[i].contents
+      except AttributeError:
+        content = rawList[i].encode('ascii', 'xmlcharrefreplace')
+      if content == []:
+        equipment.append(equipmentBuffer)
+        equipmentBuffer = ""
+      else:
+        if type(content) == list:
+          equipmentBuffer += str(content[0])        #This assumes there's only 1
+        else:
+          equipmentBuffer += str(content)
+    
+    return equipment
     
   def _cleverSoupLoading(self, url):
     """takes in a string that is either a live url or a cached html file path and returns the soup object"""
@@ -85,5 +130,6 @@ class Protocol(object):
     json += "}"
     return json
     
-#m = Protocol("http://www.nature.com/protocolexchange/protocols/153")
+#m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
+#print m.equipment
 #print m.toJSON()
