@@ -20,7 +20,7 @@ class Protocol(object):
     pass
     protocol = {}
     soup = self._cleverSoupLoading(url)
-    protocol['title'] = soup.find("h1", {"id" : "main"}).contents[0].replace('\n',"")
+    protocol['title'] = soup.find("h1", {"id" : "main"}).contents[0].strip().replace('\n',"")
     protocol['doi'] = soup.find("dd", {"class" : "doi"}).text.replace("doi:","")
     protocol['published'] = soup.find("time", {"pubdate" : "pubdate"})['datetime']
     protocol['authors'] = []
