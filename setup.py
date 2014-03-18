@@ -8,7 +8,7 @@ requiredPackages=[]
 
 setup(
     name='NPEparser',
-    version='0.5',
+    version='0.6',
     author='Charles Fracchia',
     author_email='charlesfracchia@gmail.com',
     packages=packages,

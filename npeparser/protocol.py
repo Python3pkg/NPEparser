@@ -93,9 +93,9 @@ class Protocol(object):
         equipmentBuffer = ""
       else:
         if type(content) == list:
-          equipmentBuffer += str(content[0])        #This assumes there's only 1
+          equipmentBuffer += content[0].encode('ascii', 'xmlcharrefreplace')        #This assumes there's only 1
         else:
-          equipmentBuffer += str(content)
+          equipmentBuffer += content.encode('ascii', 'xmlcharrefreplace')
     
     return equipment
     
