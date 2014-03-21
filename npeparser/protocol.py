@@ -109,26 +109,31 @@ class Protocol(object):
   
   def toJSON(self):
     json = "{"
-    for key in self.fullProtocol.keys():
+    for k, key in enumerate(self.fullProtocol.keys()):
       
       if type(getattr(self, key)) == list:
         json = '%s "%s":[' % (json, key)
-        for item in getattr(self, key):
+        for i, item in enumerate(getattr(self, key)):
           json = '%s "%s"' % (json, item.encode('ascii', 'xmlcharrefreplace'))
-          json += ","
+          if i != len(getattr(self, key))-1:
+            json += ","
         json += "],"
       
       elif type(getattr(self, key)) == dict:
         json = '%s "%s":{' % (json, key)
-        for dictKey in getattr(self, key).keys():
-          json = '%s "%s":"%s",' % (json, dictKey, getattr(self, key)[dictKey].encode('ascii', 'xmlcharrefreplace'))
+        for j, dictKey in enumerate(getattr(self, key).keys()):
+          json = '%s "%s":"%s"' % (json, dictKey, getattr(self, key)[dictKey].encode('ascii', 'xmlcharrefreplace'))
+          if j != len(getattr(self, key).keys())-1:
+            json += ","
         json += "},"
       
       else:
-        json = '%s "%s":"%s",' % (json, key, getattr(self, key).encode('ascii', 'xmlcharrefreplace'))
+        json = '%s "%s":"%s"' % (json, key, getattr(self, key).encode('ascii', 'xmlcharrefreplace'))
+        if k != len(self.fullProtocol.keys())-1:
+          json += ","
     json += "}"
     return json
     
-#m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
+m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
 #print m.reagents
-#print m.toJSON()
+print m.toJSON()
