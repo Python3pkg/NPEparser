@@ -7,3 +7,4 @@ charlesfracchia@gmail.com
 """
 #Import class
 from npeparser.protocol import Protocol
+from npeparser.exchange import ExchangeSearch
