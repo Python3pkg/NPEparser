@@ -134,6 +134,6 @@ class Protocol(object):
     json += "}"
     return json
     
-m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
+#m = Protocol("http://www.nature.com/protocolexchange/protocols/3071")
 #print m.reagents
-print m.toJSON()
+#print m.toJSON()
