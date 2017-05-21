@@ -2,10 +2,10 @@
 # Copyright Charles Fracchia 2014
 # fracchia@mit.edu
 
-import urllib2, warnings, wordcloud, cgi, re, json
+import urllib.request, urllib.error, urllib.parse, warnings, wordcloud, cgi, re, json
 from os import path
 from bs4 import BeautifulSoup
-from protocol import Protocol
+from .protocol import Protocol
 
 class ExchangeSearch(object):
   """docstring for Protocol"""
@@ -18,7 +18,7 @@ class ExchangeSearch(object):
     """takes in a string that is either a live url or a cached html file path and returns the soup object"""
     pass
     if "http" in url:
-      return BeautifulSoup(urllib2.urlopen(url).read())   #Load the URL into beautifulsoup
+      return BeautifulSoup(urllib.request.urlopen(url).read())   #Load the URL into beautifulsoup
     else:
       return BeautifulSoup(open(url))                     #Load the file into beautifulsoup, allows offline testing without raising eyebrows
   

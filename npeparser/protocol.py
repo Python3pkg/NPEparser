@@ -2,7 +2,7 @@
 # Copyright Charles Fracchia 2014
 # fracchia@mit.edu
 
-import urllib2, warnings, wordcloud, cgi, re, json
+import urllib.request, urllib.error, urllib.parse, warnings, wordcloud, cgi, re, json
 from os import path
 from bs4 import BeautifulSoup
 
@@ -12,7 +12,7 @@ class Protocol(object):
     super(Protocol, self).__init__()
     self.url = url
     self.fullProtocol = self._loadProtocol(url)
-    for key in self.fullProtocol.keys():
+    for key in list(self.fullProtocol.keys()):
       setattr(self, key, self.fullProtocol[key])
     
   def _loadProtocol(self, url):
@@ -103,13 +103,13 @@ class Protocol(object):
     """takes in a string that is either a live url or a cached html file path and returns the soup object"""
     pass
     if "http" in url:
-      return BeautifulSoup(urllib2.urlopen(url).read())   #Load the URL into beautifulsoup
+      return BeautifulSoup(urllib.request.urlopen(url).read())   #Load the URL into beautifulsoup
     else:
       return BeautifulSoup(open(url))                     #Load the file into beautifulsoup, allows offline testing without raising eyebrows
   
   def toJSON(self):
     json = "{"
-    for k, key in enumerate(self.fullProtocol.keys()):
+    for k, key in enumerate(list(self.fullProtocol.keys())):
       
       if type(getattr(self, key)) == list:
         json = '%s "%s":[' % (json, key)
@@ -121,15 +121,15 @@ class Protocol(object):
       
       elif type(getattr(self, key)) == dict:
         json = '%s "%s":{' % (json, key)
-        for j, dictKey in enumerate(getattr(self, key).keys()):
+        for j, dictKey in enumerate(list(getattr(self, key).keys())):
           json = '%s "%s":"%s"' % (json, dictKey, getattr(self, key)[dictKey].encode('ascii', 'xmlcharrefreplace'))
-          if j != len(getattr(self, key).keys())-1:
+          if j != len(list(getattr(self, key).keys()))-1:
             json += ","
         json += "},"
       
       else:
         json = '%s "%s":"%s"' % (json, key, getattr(self, key).encode('ascii', 'xmlcharrefreplace'))
-        if k != len(self.fullProtocol.keys())-1:
+        if k != len(list(self.fullProtocol.keys()))-1:
           json += ","
     json += "}"
     return json
